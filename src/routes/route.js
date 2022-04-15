@@ -1,21 +1,22 @@
 const express = require('express');
-const newcontroller = require('../controller/controller');
-
 const router = express.Router();
+const UserModel= require("../models/usermodels")
+const BookModel = require("../models/bookmodels")
+const usercontroller = require('../controller/usercontroller')
+const bookcontroller = require('../controller/bookcontroller')
 
 
-router.post('/post-me',function(req,res){
+router.get("/test-me", function (req, res) {
+    res.send("My first ever api!")
+})
 
-    newcontroller.sumarr()
-   res.send("hiiiclear")
-        
-});
+router.post("/createUser", usercontroller.createuser) 
 
-route.post('/getpost-me',function(req,res){
-        let data  =req.body
-       console.log(data)
-       res.send("hi how are you")
+router.get("/getUsersdata", usercontroller.getUsersdata)
 
-});
+router.post("/createbook", bookcontroller.createbook) 
+
+router.get("/getbookdata", bookcontroller.getbookdata)
+    
+
 module.exports = router;
-// adding this comment for no reason
