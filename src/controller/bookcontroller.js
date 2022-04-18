@@ -1,65 +1,61 @@
+const authorModel = require("../models/authorModels")
+const bookModel= require("../models/bookModel")
+const publisherModel = require("../models/publisherModels")
 
-const bookModel = require("../models/bookmodels")
+const createBook= async function (req, res) {
 
-const createbook= async function(req,res){
-    let data = req.body
-     //console.log(data)
-    let savedata  = await bookModel.create(data)
-    res.send({msg:savedata})
-   
+  let book = req.body
+  let authorId = book.author
+  let publisherId = book.publisher
 
-}
+    let author_id = req.body.author;
+    if(!author_id){
+      return res.send({msg:"authorid is required"})
+    }
 
-
-  //let alluserdata = await bookModel.find( {
-  // $or: [{authorname:"pk"}, {ispublished: true }]
-  // }).select({bookname:1,authorname:1, _id:0}).count()
+    let author = await authorModel.findById( author_id)
+    if(!author){
+      return res.send({msg:"author  is required"})
+    }
+    
+    let publisher_id = req.body.publisher;
+    if(!publisher_id){
+      return res.send({msg:" publisher id is required"})
+    }
   
-  //let alluserdata = await bookModel.find().sort( { sales:-1})
-  // let alluserdata = await bookModel.find().sort( { sales:-1}).limit(3).select({bookname:1,authorname:1, _id:0})
-  //let page = req.query.page
-  //PAGINATION:let alluserdata = await bookModel.find().skip(2 * (page-1)).limit(2)
-   
-    // let alluserdata = await bookModel.find({sales:{$eq:20}})
-     //let alluserdata = await bookModel.find({sales:{$gt:20}})
-     //let alluserdata = await bookModel.find({sales:{$lt:20}})
-     //let alluserdata = await bookModel.find({sales:{$lte:20}})
-    // let alluserdata = await bookModel.find({sales:{$gte:20}})
-    // let alluserdata = await bookModel.find({sales:{$ne:20}})
-    //let alluserdata = await bookModel.find({ $or:  [{sales: {$eq:12} },{sales: {$eq:20} }  ]    })
-    //let alluserdata = await bookModel.find({  sales:  { $in:[20,12] }   }).select({ bookname:1,authorname:1, _id:0})
-    //let alluserdata = await bookModel.find({  sales:  { $nin:[20,12] }   }).select({ bookname:1,sales:1, _id:0})
-    //let alluserdata = await bookModel.find({ sales:{$gt:11} , sales:{$lt:28}})
-
-    //FindById and findone:
-    //let alluserdata = await bookModel.findById("62593d0e980be2ff9a056ec3")
-   // let alluserdata  = await bookModel.findOne({sales:27})
+    let publisher = await publisherModel.findById(publisher_id  )
+    if(!publisher){
+      return res.send({msg:" publisher is required"})
+    }
 
 
-   //update and updateone:
-   //let alluserdata  = await bookModel.update(  {sales:20} ,  {$set: {authorname:"Ap"}}  )
+    let bookCreated = await bookModel.create(book)
+    res.send({data: bookCreated})
 
 
-   //REGEX:
-   //to search by starting name: let alluserdata  = await bookModel.find(  {bookname: /^int/}  )
-   //"i" neglate case sensitive: let alluserdata  = await bookModel.find(  {bookname: /^INT/i}  )
-   //to search bylast name:     let alluserdata  = await bookModel.find(  {bookname: /2$/}  )
-//to search randomly   :     let alluserdata  = await bookModel.find(  {bookname: /.*monk.*/}  )
-   const getbookdata  = async function(req,res)  {
-   
-    let a =4+5
-    a = a+11
-    console.log(a) 
+  }
 
-  let alluserdata  = await bookModel.find()
-
-   console.log(alluserdata)
-   let b = 8+3
-   b = b+20
-   console.log(b)
-   res.send({ msg:alluserdata})
-
-}
-
-module.exports.createbook = createbook
-module.exports.getbookdata = getbookdata
+  const fetchbooks = async function (req, res) {
+      
+      let books = await bookModel.find().populate('newAuthor publisher')
+      res.send({data: books})
+  }
+  
+  const updateBooks = async function (req, res) {
+      // update hardcover to true for few books
+      let hardCOverPublishers = await publisherModel.find({name : {$in:['Penguin','HarperCollins'] }}).select({_id:1})
+      let arrayOfPublishers = []
+      
+      for (let i = 0; i < hardCOverPublishers.length; i++) {
+          let objId = hardCOverPublishers[i]._id 
+          arrayOfPublishers.push(objId)
+      }
+      
+      let books = await bookModel.updateMany({publisher: {$in: arrayOfPublishers}},{isHardCover: true})
+  
+      res.send({data: books})
+  }
+  
+  module.exports.createBook = createBook
+  module.exports.fetchbooks = fetchbooks
+  module.exports.updateBooks = updateBooks
