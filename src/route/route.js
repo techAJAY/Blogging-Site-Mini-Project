@@ -17,7 +17,7 @@ router.post("/createBook", bookController.createBook  )
 
 router.get("/get-all-books",bookController.fetchbooks)
 
-router.put("/book",bookController.updateBooks)
+//router.put("/book",bookController.updateBooks)
 
 
 
