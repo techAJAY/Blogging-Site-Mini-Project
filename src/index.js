@@ -1,4 +1,6 @@
 const express = require('express');
+//const logger  = require('morgan')
+const moment =require('moment');
 const bodyParser = require('body-parser');
 const route = require('./route/route.js');
 const { default: mongoose } = require('mongoose');
@@ -13,6 +15,13 @@ mongoose.connect("mongodb+srv://gtgaurav:Wp2gKNWXbHDifb5n@cluster0.9p9yl.mongodb
 })
 .then( () => console.log("MongoDb is connected"))
 .catch ( err => console.log(err) )
+
+app.use(
+    function(req,res,next){
+   console.log(moment().format(),req.path,req.ip);
+    next();   
+}
+);
 
 app.use('/', route);
 

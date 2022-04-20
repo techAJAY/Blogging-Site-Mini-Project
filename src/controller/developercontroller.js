@@ -10,12 +10,15 @@ const createdeveloper= async function (req, res) {
 
     const fetchsalldev = async function(req,res){
     let alldev   =   await developerModel.find({gender:female},{percentage:{$gte:70}})
-     res.send({data:alldev})
+    res.send({data:alldev})
 }
+    const developers = async function(req,res){
 
-const developers = async function(req,res){
-    let percentage = req.query
-    let alldevelopers  =   await developerModel.find()
+    let value = req.query
+    let tem ={ }
+    tem['$gte']
+    console.log(value.percentage)
+    let alldev  =   await developerModel.find({percentage:{}}).populate('batch')
     console.log(alldev)
      res.send({data:alldev})
 }
