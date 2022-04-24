@@ -19,7 +19,7 @@ router.get("/users/:userId",  auth.validateToken,userController.getUserData)
 
 router.put("/users/:userId",  auth.validateToken,userController.updateUser)
 
-router.delete("/users/:userId", auth.validateToken, userController.deleteUser)
+// router.delete("/users/:userId", auth.validateToken, userController.deleteUser)
 
 router.post("/users/:userId",auth.validateToken,userController.postMessage)
 
