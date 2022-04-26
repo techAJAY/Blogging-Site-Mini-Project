@@ -1,26 +1,22 @@
 const express = require('express');
 const router = express.Router();
-const userController= require("../controllers/userController")
-const auth = require("../middelwares/auth")
+const cowincontroller= require("../controllers/cowincontroller")
+//const auth = require("../middelwares/auth")
 
 
+router.get("/get/sessiondistrict",cowincontroller.getsession)
 
-router.get("/test-me", function (req, res) {
-    res.send("My first ever api!")
-})
+router.get("/get/sortedweather",cowincontroller.sortedweather)
+
+// router.get("cowin/sessiondistrict",cowincontroller.getsession)
+router.get("/getallmems", cowincontroller.getAllMems);
+router.post("/pickmemid",cowincontroller.pickMemId);
+
+router.post("/creatememes", cowincontroller.createMemes)
 
 
-router.post("/users", userController.createUser  )
-
-router.post("/login", userController.loginUser)
-
-//The userId is sent by front end
-router.get("/users/:userId",  auth.validateToken,userController.getUserData)
-
-router.put("/users/:userId",  auth.validateToken,userController.updateUser)
-
-// router.delete("/users/:userId", auth.validateToken, userController.deleteUser)
-
-router.post("/users/:userId",auth.validateToken,userController.postMessage)
 
 module.exports = router;
+
+
+//https://cdn-api.co-vin.in/api
